@@ -1,0 +1,32 @@
+package main;
+
+import java.awt.Color;
+import java.awt.Dimension;
+
+import javax.swing.JPanel;
+
+public class GamePanel extends JPanel {
+	
+	// SCREEN SETTINGS
+	
+	// 16x16 tile ( 1 character and map tiles in this game )
+	// is kind of a standard size for many 2d Game, and many character
+	final int originalTileSize = 16;
+	
+	// realy is scale up scale number ( here is 48 )
+	final int scale = 3;
+	
+	final int tileSize = originalTileSize * scale;
+	final int maxScreenCol = 16;
+	final int maxScreenRow = 12;
+	final int screenWidth = tileSize * maxScreenCol; // 768 pixels
+	final int screenHeight = tileSize * maxScreenRow; // 576 pixels
+	
+	public GamePanel() {
+		// Set the side of this class ( JPanel )
+		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
+		this.setBackground(Color.black);
+	}
+	
+	
+}

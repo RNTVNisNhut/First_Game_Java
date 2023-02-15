@@ -1,0 +1,17 @@
+
+
+1. Treasure Hunting game 
+12/5/2023
+	- Create a game loop 
+	- Display player character
+	- Control player character
+	- Display background tiles
+	- Display objects
+	- Complete the game
+2. Action RPG Game 
+	- Create monsters
+	- Create battle system
+	- Create NPSs
+	- Create inventory
+	- Create events
+	- Complete the game
