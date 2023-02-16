@@ -10,15 +10,20 @@ public class main {
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setResizable(false);
 		window.setTitle("2D Adventure");
+
 		
 		GamePanel gamePanel = new GamePanel();
-		window.add(gamePanel);
 		
+		window.add(gamePanel);
 		window.pack();
 		
 		// the window will be displayed at the center of the screen
+		// CAN't MOVE EVERYWHERE
 		window.setLocationRelativeTo(null);
+		// NEED Whent command above
 		window.setVisible(true);
+
 		
+		gamePanel.startGameTheread();
 	}
 }

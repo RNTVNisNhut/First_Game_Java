@@ -1,0 +1,132 @@
+package main;
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+import javax.swing.JPanel;
+
+import entity.Player;
+import tile.TileManager;
+
+// This is a subclass of JPanel so bassically this is a Jpanel class with a bit more extra functions 
+public class GamePanel extends JPanel implements Runnable {
+
+	// SCREEN SETTINGS ================================
+
+	// 16x16 tile ( 1 character and map tiles in this game )
+	// is kind of a standard size for many 2d Game, and many character
+	final int originalTileSize = 16;
+
+	// realy is scale up scale number ( here is 48 )
+	final int scale = 4;
+
+	public final int tileSize = originalTileSize * scale;
+	public final int maxScreenCol = 16;
+	public final int maxScreenRow = 12;
+	public final int screenWidth = tileSize * maxScreenCol; // 768 pixels
+	public final int screenHeight = tileSize * maxScreenRow; // 576 pixels
+
+	// FPS
+	int FPS = 60;
+
+	// Thread started, it keeps your program running until you stop it
+	// NEED IMPLEMENT Runnable
+	Thread gameThread;
+	KeyHandler keyH = new KeyHandler();
+	Player player = new Player(this, keyH);
+	TileManager tileM = new TileManager(this);
+
+	public GamePanel() {
+		// Set the side of this class ( JPanel )
+		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
+		this.setBackground(Color.GREEN);
+
+		// All of drawing from this component will be done in an offscreen painting
+		// buffer
+		this.setDoubleBuffered(true);
+		// add KeyHandler to GamePanel, this GamePanel can recognize ( NHẬN RA ) key
+		// input
+		this.addKeyListener(keyH);
+		// With this, game Panel can be " Focused " to receive key input
+		this.setFocusable(true);
+	}
+
+	public void startGameTheread() {
+
+		// Passing GamePanel class to this thread's constructor, that's how you
+		// instantiate a thread
+		gameThread = new Thread(this);
+		gameThread.start();
+	}
+
+	// NEED went implement Runnable, it use to create a Theread
+	// So basically when start gameThread it automatically calls this run method
+	// Run method means it will draw in screen times
+	@Override
+	public void run() {
+		double drawInterval = 1000000000 / FPS;
+		double delta = 0;
+		long lastTime = System.nanoTime();
+		long currentTime;
+		long timer = 0;
+		int drawCount = 0;
+
+		while (gameThread != null) {
+
+			currentTime = System.nanoTime();
+
+			delta += (currentTime - lastTime) / drawInterval;
+			timer += (currentTime - lastTime);
+			lastTime = currentTime;
+
+			if (delta >= 1) {
+				update();
+				repaint();
+				delta--;
+				drawCount++;
+			}
+
+			if (timer >= 1000000000) {
+				System.out.println("FPS: " + drawCount);
+				drawCount = 0;
+				timer = 0;
+			}
+		}
+	}
+
+	public void update() {
+		player.update();
+	}
+
+	// this is not original name or anything so it's one of the standard methods to
+	// draw things on JPanel
+	// Gapghics is a class has MANY fuction to draw obj on the screen
+	// This use to draw something in screen
+	// Imagine Grapghics is a pencil
+	public void paintComponent(Graphics g) {
+
+		// just a format whenever use this paintComponent on Jpanel, NEED to type this
+		// super means the parent class of this class ( MEANS Jpanel, because GamePanel
+		// is subclass of JPanel
+		super.paintComponent(g);
+
+		// Before using Graphics , we're gonna convert this Graphics to Graphics2D class
+		// We can use Graphics but this time we're use Graphics2D because it has some
+		// function that i want to use later
+		Graphics2D g2 = (Graphics2D) g;
+
+		tileM.draw(g2);
+		player.draw(g2);
+
+		// dispose : vứt bỏ, xử lý
+		// release : giải phóng, xử lý
+		// dispose of this graphics context and release any system resources
+		// that it is using
+		// program still works without this linn but this is a good practice to save
+		// some memories
+		g2.dispose();
+	}
+
+}
